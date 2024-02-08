@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraDriver", "JiraDriver\JiraDriver.csproj", "{706F58F0-522A-4E40-8F40-04C3F57B9AA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraDriverTest", "JiraDriverTest\JiraDriverTest.csproj", "{9B4AFA0C-3187-400F-94E7-A78308C52E42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraConsole", "JiraConsole\JiraConsole.csproj", "{059F7291-FD63-4083-BC70-A2E0495DA74D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeetingCapture", "MeetingCapture\MeetingCapture.csproj", "{41523DAE-36DE-4D95-90F7-E5778C86CDF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp-OpenIDConnect-DotNet-graph", "2-1-Call-MSGraph\WebApp-OpenIDConnect-DotNet-graph.csproj", "{271FCB11-34A2-49A6-A220-1AB24B79AE48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{706F58F0-522A-4E40-8F40-04C3F57B9AA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706F58F0-522A-4E40-8F40-04C3F57B9AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706F58F0-522A-4E40-8F40-04C3F57B9AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706F58F0-522A-4E40-8F40-04C3F57B9AA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B4AFA0C-3187-400F-94E7-A78308C52E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B4AFA0C-3187-400F-94E7-A78308C52E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B4AFA0C-3187-400F-94E7-A78308C52E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B4AFA0C-3187-400F-94E7-A78308C52E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0085E616-59E2-4CED-A93D-DA3BBBDBB1E2}
+	EndGlobalSection
+EndGlobal
