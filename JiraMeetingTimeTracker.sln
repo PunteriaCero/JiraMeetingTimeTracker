@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeetingCapture", "MeetingCa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp-OpenIDConnect-DotNet-graph", "2-1-Call-MSGraph\WebApp-OpenIDConnect-DotNet-graph.csproj", "{271FCB11-34A2-49A6-A220-1AB24B79AE48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{9DC7F73A-6E3B-4549-94A0-97BF5002AE60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DC7F73A-6E3B-4549-94A0-97BF5002AE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DC7F73A-6E3B-4549-94A0-97BF5002AE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DC7F73A-6E3B-4549-94A0-97BF5002AE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DC7F73A-6E3B-4549-94A0-97BF5002AE60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

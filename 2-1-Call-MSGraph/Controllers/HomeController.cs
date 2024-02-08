@@ -78,19 +78,7 @@ namespace WebApp_OpenIDConnect_DotNet_graph.Controllers
 
             try
             {
-                var result = await _graphServiceClient.Me.CalendarView.GetAsync((requestConfiguration) =>
-                {
-                    string[] select = { "subject", "organizer", "attendees", "start", "end" };
-                    requestConfiguration.QueryParameters.Select = select;
-                    requestConfiguration.QueryParameters.Filter = "startsWith(subject,'SCT310-')";
-                    requestConfiguration.QueryParameters.Top = 50;
-                    requestConfiguration.QueryParameters.StartDateTime = DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-ddThh:mm:ss");
-                    requestConfiguration.QueryParameters.EndDateTime = DateTime.UtcNow.AddDays(7).ToString("yyyy-MM-ddThh:mm:ss");
-                    requestConfiguration.QueryParameters.Count = true;
-                });
-
-
-                var lista = result.Value.Select(s => new { s.Subject, s.Organizer.EmailAddress, atte = s.Attendees.Select(a => a.EmailAddress).ToList(), s.Start, s.End }).ToList();
+                
 
                 // Get user photo
                 using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
@@ -103,9 +91,7 @@ namespace WebApp_OpenIDConnect_DotNet_graph.Controllers
             {
                 Console.WriteLine($"{pex.Message}");
                 ViewData["Photo"] = null;
-
-                var t = new Task();
-                
+               
             }
 
             ViewData["Me"] = currentUser;
