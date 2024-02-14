@@ -9,6 +9,8 @@ public class Class1 : IClass1
 
     public string Name { get; private set; }
 
+    public string AccountId { get; private set; }
+
     public Class1(Jira jira)
     {
         this.jira = jira;
@@ -32,6 +34,7 @@ public class Class1 : IClass1
     {
         var worklogs = await jira.Issues.GetWorklogsAsync(key, token);
         worklogs = worklogs.Where(w => w.StartDate == startDate);
+        worklogs = worklogs.Where(w => w.AuthorUser.AccountId == AccountId);
         worklogs.OrderByDescending(o => o.CreateDate);
 
         var worklog = worklogs.FirstOrDefault();
@@ -82,6 +85,7 @@ public class Class1 : IClass1
     public async Task<string> GetName(CancellationToken token = default)
     {
         var myself = await jira.Users.GetMyselfAsync(token);
+        AccountId = myself.AccountId;
         return myself.DisplayName;
     }
 
