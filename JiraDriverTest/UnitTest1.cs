@@ -14,6 +14,7 @@ public class Tests
         clase = await Class1.Init("https://baufest.atlassian.net/", "hlavrencic@baufest.com", TOKEN);
     }
 
+    [Ignore("TOKEN")]
     [Test]
     public void Test1()
     {
@@ -22,6 +23,7 @@ public class Tests
         Assert.That(issue, Is.EqualTo("DRP - Analisis de riesgos"));
     }
 
+    [Ignore("TOKEN")]
     [Test]
     public async Task Test2(){
         await clase.RegisterWork("SCT310-4771", "1m", DateTime.Now, "prueba API");
