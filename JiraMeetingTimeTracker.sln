@@ -9,11 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraDriverTest", "JiraDrive
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraConsole", "JiraConsole\JiraConsole.csproj", "{059F7291-FD63-4083-BC70-A2E0495DA74D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeetingCapture", "MeetingCapture\MeetingCapture.csproj", "{41523DAE-36DE-4D95-90F7-E5778C86CDF1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp-OpenIDConnect-DotNet-graph", "2-1-Call-MSGraph\WebApp-OpenIDConnect-DotNet-graph.csproj", "{271FCB11-34A2-49A6-A220-1AB24B79AE48}"
-EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reactproject1", "reactproject1\reactproject1.esproj", "{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,20 +29,10 @@ Global
 		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{059F7291-FD63-4083-BC70-A2E0495DA74D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41523DAE-36DE-4D95-90F7-E5778C86CDF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{271FCB11-34A2-49A6-A220-1AB24B79AE48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84CD3CEE-A3D0-4E7C-A721-B8B570C81983}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

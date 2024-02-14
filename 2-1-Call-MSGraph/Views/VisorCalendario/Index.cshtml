@@ -1,0 +1,133 @@
+﻿@model CallMSGraph.Models.VisorCalendarioModel;
+
+<h2>Search calendar events</h2>
+<form method="get">
+    @Html.EditorFor(x => x.From)
+    @Html.EditorFor(x => x.To)
+    @Html.DropDownListFor(m => m.Prefix, new SelectList(Model.Projects, "Value", "Text"), "Select")
+    @* <input type="text" name="prefix" value="@Model?.Prefix" /> *@
+    <button>SEARCH</button>
+</form>
+<br />
+<br />
+
+<h2>Results</h2>
+@if (Model?.Calendar != null)
+{
+    
+    <table cellpadding="1" border="1">
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>Issue</th>
+                <th>Subject</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>Jira ID</th>
+                <th>Jira Hs</th>
+                <th>Jira StartDate</th>
+                <th>Jira CreateDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Calendar)
+            {
+                <form method="post" action="@Url.Action("Update")">
+                <tr>
+                    <td>
+                        @if (item.JiraWorkLog != null)
+                        {
+                            <button name="action">REMOVE</button>
+                        } 
+                        else
+                        {
+                            <button name="action">ADD</button>
+                        }
+                    </td>
+                    <td>@item.Issue <input type="hidden" name="issue" value="@item.Issue"></td>
+                    <td>@item.Subject <input type="hidden" name="subject" value="@item.Subject"></td>
+                    <td>@item.StartDate <input type="hidden" name="startDate" value="@item.StartDate"></td>
+                    <td>@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate"></td>
+                    <td><input type="text" readonly="readonly" name="Id" value="@item.JiraWorkLog?.Id"></td>
+                    <td><input type="text" readonly="readonly" name="jiraLength" value="@item.JiraWorkLog?.Length"></td>
+                    <td><input type="datetime" readonly="readonly" name="jiraStartDate" value="@item.JiraWorkLog?.StartDate"></td>
+                    <td><input type="datetime" readonly="readonly" name="jiraCreateDate" value="@item.JiraWorkLog?.CreateDate"></td>
+                </tr>
+                </form>
+            }
+        </tbody>
+    </table>
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    let $ = jQuery;
+    $(document).ready(function () {
+        /* attach a submit handler to the forms */
+        $("form[method='post']").submit(function (event) {
+
+            /* stop form from submitting normally */
+            event.preventDefault();
+
+            /* get the action attribute from the <form action=""> element */
+            let form = this;
+            let $form = $(form);
+
+            // Spinner
+            let cont = 0;
+            let interval = setInterval(() => { 
+                
+                if (cont > 3) cont = 0;
+                cont++;
+                let text = "";
+                for (let i = 1; i <= cont; i++) {
+                    text = text + ".";
+                }
+
+                form.elements['action'].innerText = text;
+            }, 500);
+            form.elements['action'].disabled = true;         
+
+            var formData = new FormData(event.target);
+            let values = Object.fromEntries(formData);
+
+            let url = '@Url.Action("Create")';
+            let done = (data) => {
+                form.elements['action'].innerText = "REMOVE";
+                form.elements['Id'].value = data.id;
+                form.elements['jiraCreateDate'].value = data.createDate;
+                form.elements['jiraLength'].value = data.length;
+                form.elements['jiraStartDate'].value = data.startDate;
+            };
+
+            if (values.Id) {
+                url = '@Url.Action("Delete")';
+                done = (data) => {
+                    form.elements['action'].innerText = "ADD";
+                    form.elements['Id'].value = "";
+                    form.elements['jiraCreateDate'].value = "";
+                    form.elements['jiraLength'].value = "";
+                    form.elements['jiraStartDate'].value = "";
+                };
+            }
+
+            //let data = $form.serialize();
+
+            /* Send the data using post with element id name and name2*/
+            let posting = $.post(url, values);
+
+            /* Alerts the results */
+            posting.done(done);
+
+            posting.fail(function (err) {
+                alert(err);
+            });
+
+            posting.always(() => { 
+                clearInterval(interval);
+                form.elements['action'].disabled = false;
+            });
+        });
+    });
+</script>
+
+

@@ -1,6 +1,8 @@
 using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using CallMSGraph.Filters;
+using JiraDriver;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +31,15 @@ namespace WebApp_OpenIDConnect_DotNet_graph
         {
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "MyAllowSpecificOrigins",
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:5173");
+                                  });
+            });
+
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration)
                 .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
@@ -46,6 +57,8 @@ namespace WebApp_OpenIDConnect_DotNet_graph
                     .RequireAuthenticatedUser()
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+                options.Filters.Add<JiraExceptionFilter>();
+
             });
 
             services.AddRazorPages()
@@ -54,6 +67,8 @@ namespace WebApp_OpenIDConnect_DotNet_graph
             // Add the UI support to handle claims challenges
             services.AddServerSideBlazor()
                .AddMicrosoftIdentityConsentHandler();
+
+            services.AddScoped<IJiraServiceDecorator, JiraServiceDecorator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +89,8 @@ namespace WebApp_OpenIDConnect_DotNet_graph
 
             app.UseRouting();
 
+            app.UseCors("MyAllowSpecificOrigins");
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -84,6 +101,7 @@ namespace WebApp_OpenIDConnect_DotNet_graph
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
         }
 
         /// Gets the secret from key vault via an enabled Managed Identity.
