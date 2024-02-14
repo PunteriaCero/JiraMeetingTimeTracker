@@ -126,7 +126,7 @@ namespace CallMSGraph.Controllers
                 string[] select = { "subject", "organizer", "attendees", "start", "end" };
                 requestConfiguration.QueryParameters.Select = select;
                 requestConfiguration.QueryParameters.Filter = "startsWith(subject,'" + prefix + "')";
-                //requestConfiguration.QueryParameters.Top = 100;
+                requestConfiguration.QueryParameters.Top = 200;
                 requestConfiguration.QueryParameters.StartDateTime = from.ToString("yyyy-MM-ddThh:mm:ss");
                 requestConfiguration.QueryParameters.EndDateTime = to.ToString("yyyy-MM-ddThh:mm:ss");
                 requestConfiguration.QueryParameters.Count = true;
