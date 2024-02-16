@@ -125,7 +125,7 @@ namespace CallMSGraph.Controllers
             {
                 string[] select = { "subject", "organizer", "attendees", "start", "end" };
                 requestConfiguration.QueryParameters.Select = select;
-                requestConfiguration.QueryParameters.Filter = "startsWith(subject,'" + prefix + "')";
+                requestConfiguration.QueryParameters.Filter = "contains(subject,'" + prefix + "')";
                 requestConfiguration.QueryParameters.Top = 200;
                 requestConfiguration.QueryParameters.StartDateTime = from.ToString("yyyy-MM-ddThh:mm:ss");
                 requestConfiguration.QueryParameters.EndDateTime = to.ToString("yyyy-MM-ddThh:mm:ss");
@@ -134,14 +134,16 @@ namespace CallMSGraph.Controllers
 
 
             var lista = result.Value.Select(s => new { s.Subject, s.Organizer.EmailAddress, atte = s.Attendees.Select(a => a.EmailAddress).ToList(), s.Start, s.End });
-
-            return lista.Select(s => 
-            new CalendarioModel() { 
-                Subject = s.Subject, 
-                StartDate = s.Start.ToDateTime(), 
+            var model = lista.Select(s =>
+            new CalendarioModel()
+            {
+                Subject = s.Subject,
+                StartDate = s.Start.ToDateTime(),
                 EndDate = s.End.ToDateTime(),
-                Issue = ParseIssue(prefix, s.Subject) 
+                Issue = ParseIssue(prefix, s.Subject)
             });
+            model = model.Where(s => !s.Issue.IsNullOrEmpty());
+            return model;
         }
 
     }
