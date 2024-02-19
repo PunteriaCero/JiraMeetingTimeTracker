@@ -90,7 +90,8 @@ namespace CallMSGraph.Controllers
         private string TimeString(DateTime startDate, DateTime endDate)
         {
             var timeSpan = endDate - startDate;
-            var hours = CustomRound(timeSpan.TotalHours);
+            var cultureFr = new System.Globalization.CultureInfo("fr-fr");
+            var hours = CustomRound(timeSpan.TotalHours).ToString(cultureFr);
             var result = $"{hours}h";
             return result;
         }
