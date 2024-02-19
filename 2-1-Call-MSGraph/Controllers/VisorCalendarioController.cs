@@ -101,14 +101,15 @@ namespace CallMSGraph.Controllers
             double rounded = Math.Round(value, MidpointRounding.ToZero);
             double diff = value - rounded;
 
-            if (diff > 0)
-            {
-                return rounded + 0.5;
-            }
-            else if (diff > 0.5)
+            if (diff > 0.5)
             {
                 return rounded + 1;
-            } else
+            }
+            else if (diff > 0)
+            {
+                return rounded + 0.5;
+            } 
+            else
             {
                 return rounded;
             }
