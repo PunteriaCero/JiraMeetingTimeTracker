@@ -90,8 +90,28 @@ namespace CallMSGraph.Controllers
         private string TimeString(DateTime startDate, DateTime endDate)
         {
             var timeSpan = endDate - startDate;
-            var hours = Math.Round(timeSpan.TotalHours,MidpointRounding.ToPositiveInfinity);
-            return $"{hours}h";
+            var hours = CustomRound(timeSpan.TotalHours);
+            var result = $"{hours}h";
+            return result;
+        }
+
+        static double CustomRound(double value)
+        {
+            double rounded = Math.Round(value, MidpointRounding.ToZero);
+            double diff = value - rounded;
+
+            if (diff > 0)
+            {
+                return rounded + 0.5;
+            }
+            else if (diff > 0.5)
+            {
+                return rounded + 1;
+            } else
+            {
+                return rounded;
+            }
+            
         }
 
         public async Task<JiraWorkLog?> GetWork(string key, DateTime startDate, CancellationToken token = default)
@@ -125,11 +145,11 @@ namespace CallMSGraph.Controllers
             {
                 string[] select = { "subject", "organizer", "attendees", "start", "end" };
                 requestConfiguration.QueryParameters.Select = select;
-                requestConfiguration.QueryParameters.Filter = "contains(subject,'" + prefix + "')";
+                //requestConfiguration.QueryParameters.Filter = "contains(subject,'" + prefix + "')";
                 requestConfiguration.QueryParameters.Top = 200;
                 requestConfiguration.QueryParameters.StartDateTime = from.ToString("yyyy-MM-ddThh:mm:ss");
                 requestConfiguration.QueryParameters.EndDateTime = to.ToString("yyyy-MM-ddThh:mm:ss");
-                requestConfiguration.QueryParameters.Count = true;
+                //requestConfiguration.QueryParameters.Count = true;
             });
 
 
@@ -143,6 +163,7 @@ namespace CallMSGraph.Controllers
                 Issue = ParseIssue(prefix, s.Subject)
             });
             model = model.Where(s => !s.Issue.IsNullOrEmpty());
+            model = model.OrderBy(x => x.StartDate);
             return model;
         }
 
