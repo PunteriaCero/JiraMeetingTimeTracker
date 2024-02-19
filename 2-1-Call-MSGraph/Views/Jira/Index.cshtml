@@ -9,8 +9,8 @@
 <p>Hot to get my token: <a href="https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/" target="_blank">https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/</a></p>
 
 <form method="post" action="@Url.Action("Login")" >
-    @Html.EditorFor(x => x.User)
-    @Html.EditorFor(x => x.Token)
+    @Html.EditorFor(x => x.User, new { htmlAttributes = new { placeholder = "example@domain.com" } } )
+    @Html.EditorFor(x => x.Token, new { htmlAttributes = new { placeholder = "token" } })
     <button>SAVE</button>
 </form>
 <p>@Html.DisplayTextFor(x => x.Message)</p>
