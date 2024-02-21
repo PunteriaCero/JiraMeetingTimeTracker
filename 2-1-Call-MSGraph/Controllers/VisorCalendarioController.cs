@@ -52,30 +52,13 @@ namespace CallMSGraph.Controllers
             return View(model);
         }
 
-
-        [TypeFilter(typeof(JiraAuthFilter))]
-        [HttpPost]
-        public async Task<IActionResult> Update(JiraWorkUpdateModel model)
-        {
-            if (model.Action == ACTION_REMOVE)
-            {
-                await class1.DeleteWork(model.Issue, model.StartDate);
-            }
-            else
-            {
-                var time = TimeString(model.StartDate, model.EndDate);
-                await class1.RegisterWork(model.Issue, time, model.StartDate, model.Subject);
-            }            
-
-            return RedirectToAction("Index");
-        }
-
         [TypeFilter(typeof(JiraAuthFilter))]
         [HttpPost]
         public async Task<JsonResult> Create(JiraWorkUpdateModel model)
         {
-            var time = TimeString(model.StartDate, model.EndDate);
-            var work = await class1.RegisterWork(model.Issue, time, model.StartDate, model.Subject);
+            var startDate = new DateTime(model.StartDate);
+            var time = TimeString(startDate, new DateTime(model.EndDate));
+            var work = await class1.RegisterWork(model.Issue, time, startDate, model.Subject);
             return Json(work);
         }
 
@@ -83,7 +66,8 @@ namespace CallMSGraph.Controllers
         [HttpPost]
         public async Task<JsonResult> Delete(JiraWorkUpdateModel model)
         {
-            await class1.DeleteWork(model.Issue, model.StartDate);
+            var startDate = new DateTime(model.StartDate);
+            await class1.DeleteWork(model.Issue, startDate);
             return Json(new {});
         }
 
