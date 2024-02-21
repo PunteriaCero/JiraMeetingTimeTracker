@@ -33,7 +33,8 @@ public class Class1 : IClass1
     public async Task<JiraWorkLog?> GetWork(string key, DateTime startDate, CancellationToken token = default)
     {
         var worklogs = await jira.Issues.GetWorklogsAsync(key, token);
-        worklogs = worklogs.Where(w => w.StartDate == startDate);
+        worklogs = worklogs.Where(w => 
+            w.StartDate?.ToUniversalTime() == startDate.ToUniversalTime());
         worklogs = worklogs.Where(w => w.AuthorUser.AccountId == AccountId);
         worklogs.OrderByDescending(o => o.CreateDate);
 
@@ -56,9 +57,9 @@ public class Class1 : IClass1
         return new JiraWorkLog
         {
             Id = worklog.Id,
-            StartDate = worklog.StartDate,
+            StartDate = worklog.StartDate?.ToUniversalTime(),
             Length = TimeSpan.FromSeconds(worklog.TimeSpentInSeconds),
-            CreateDate = worklog.CreateDate
+            CreateDate = worklog.CreateDate?.ToUniversalTime()
         };
     }
 
