@@ -144,8 +144,8 @@ namespace CallMSGraph.Controllers
             new CalendarioModel()
             {
                 Subject = s.Subject,
-                StartDate = s.Start.ToDateTime(),
-                EndDate = s.End.ToDateTime(),
+                StartDate = s.Start.ToDateTime().ToUniversalTime(),
+                EndDate = s.End.ToDateTime().ToUniversalTime(),
                 Issue = ParseIssue(prefix, s.Subject)
             });
             model = model.Where(s => !s.Issue.IsNullOrEmpty());
