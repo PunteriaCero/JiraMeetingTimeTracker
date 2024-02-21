@@ -46,8 +46,8 @@
                     </td>
                     <td>@item.Issue <input type="hidden" name="issue" value="@item.Issue"></td>
                     <td>@item.Subject <input type="hidden" name="subject" value="@item.Subject"></td>
-                    <td>@item.StartDate <input type="hidden" name="startDate" value="@item.StartDate.Ticks"></td>
-                        <td>@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate.Ticks"></td>
+                    <td>@item.StartDate <input type="hidden" name="startDate" value="@item.StartDate.ToUniversalTime().Ticks"></td>
+                        <td>@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate.ToUniversalTime().Ticks"></td>
                     <td><input type="text" readonly="readonly" name="Id" value="@item.JiraWorkLog?.Id"></td>
                     <td><input type="text" readonly="readonly" name="jiraLength" value="@item.JiraWorkLog?.Length"></td>
                         <td><input type="datetime" readonly="readonly" name="jiraStartDate" value="@item.JiraWorkLog?.StartDate"></td>

@@ -56,8 +56,8 @@ namespace CallMSGraph.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(JiraWorkUpdateModel model)
         {
-            var startDate = new DateTime(model.StartDate);
-            var time = TimeString(startDate, new DateTime(model.EndDate));
+            var startDate = new DateTime(model.StartDate, DateTimeKind.Utc);
+            var time = TimeString(startDate, new DateTime(model.EndDate, DateTimeKind.Utc));
             var work = await class1.RegisterWork(model.Issue, time, startDate, model.Subject);
             return Json(work);
         }
@@ -66,7 +66,7 @@ namespace CallMSGraph.Controllers
         [HttpPost]
         public async Task<JsonResult> Delete(JiraWorkUpdateModel model)
         {
-            var startDate = new DateTime(model.StartDate);
+            var startDate = new DateTime(model.StartDate, DateTimeKind.Utc);
             await class1.DeleteWork(model.Issue, startDate);
             return Json(new {});
         }
