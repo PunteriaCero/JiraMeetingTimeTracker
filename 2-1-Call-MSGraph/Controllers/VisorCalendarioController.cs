@@ -12,6 +12,7 @@ using NuGet.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,9 +47,7 @@ namespace CallMSGraph.Controllers
                 return View(model);
             }
 
-            var lista = GetEventsWithJira(model.Prefix, model.From, model.To);
-            model.Calendar = lista.ToBlockingEnumerable(token).ToArray();
-             
+            model.Calendar = await GetEventsWithJiraAsync(model.Prefix, model.From, model.To);
             return View(model);
         }
 
@@ -114,6 +113,21 @@ namespace CallMSGraph.Controllers
                 evento.JiraWorkLog = work;
                 yield return evento;
             }
+        }
+        public async Task<IList<CalendarioModel>> GetEventsWithJiraAsync(string prefix, DateTime from, DateTime to)
+        {
+            var events = await GetEvents(prefix, from, to);
+            var eventList = events.ToArray();
+            var tasks = events.Select(GetJiraWork);
+            var calendars = await Task.WhenAll(tasks);
+            return calendars;
+        }
+
+        private async Task<CalendarioModel> GetJiraWork(CalendarioModel evento)
+        {
+            var work = await GetWork(evento.Issue, evento.StartDate);
+            evento.JiraWorkLog = work;
+            return evento;
         }
 
         private string ParseIssue(string prefix, string subject)
