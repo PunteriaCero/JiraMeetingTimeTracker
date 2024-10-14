@@ -161,18 +161,14 @@
 
             // Function to update the date text before input
             function updateDateText(inputName) {
-                var input = $('input[name="' + inputName + '"]');
-                var ticksValue = parseInt(input.val());
-                var date = ticksToDate(ticksValue);
-
-                // Format the date according to user's locale (PC region)
-                var formattedDate = formatDate(date);
-
-                // Find the TD containing the input and update its text
-                input.closest('td').contents().filter(function () {
-                    return this.nodeType === 3; // Text node
-                }).each(function () {
-                    this.nodeValue = formattedDate; // Replace StartDate or EndDate with the formatted date
+                $('td:has(input[name="' + inputName + '"])').each(function () {
+                    const input = $(this).find('input[name="' + inputName + '"]');
+                    const ticks = parseInt(input.val());
+                    const date = ticksToDate(ticks);
+                    const formattedDate = formatDate(date);
+                    $(this).contents().filter(function () {
+                        return this.nodeType === 3; // Text node
+                    }).first().replaceWith(formattedDate + ' ');
                 });
             }
 
