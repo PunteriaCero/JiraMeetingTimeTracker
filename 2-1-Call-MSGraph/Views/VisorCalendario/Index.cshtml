@@ -47,11 +47,11 @@
                     <td>@item.Issue <input type="hidden" name="issue" value="@item.Issue"></td>
                     <td>@item.Subject <input type="hidden" name="subject" value="@item.Subject"></td>
                     <td>@item.StartDate <input type="hidden" name="startDate" value="@item.StartDate.ToUniversalTime().Ticks"></td>
-                        <td>@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate.ToUniversalTime().Ticks"></td>
+                    <td>@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate.ToUniversalTime().Ticks"></td>
                     <td><input type="text" readonly="readonly" name="Id" value="@item.JiraWorkLog?.Id"></td>
                     <td><input type="text" readonly="readonly" name="jiraLength" value="@item.JiraWorkLog?.Length"></td>
-                        <td><input type="datetime" readonly="readonly" name="jiraStartDate" value="@item.JiraWorkLog?.StartDate"></td>
-                        <td><input type="datetime" readonly="readonly" name="jiraCreateDate" value="@item.JiraWorkLog?.CreateDate"></td>
+                    <td><input type="datetime" readonly="readonly" name="jiraStartDate" value="@item.JiraWorkLog?.StartDate"></td>
+                    <td><input type="datetime" readonly="readonly" name="jiraCreateDate" value="@item.JiraWorkLog?.CreateDate"></td>
                 </tr>
                 </form>
             }
@@ -63,8 +63,15 @@
 <script>
     let $ = jQuery;
     $(document).ready(function () {
+
+        const $formulario = $("form[method='post']");
+
+        if (!$formulario) {
+            console.error("No se pudo encontrar el formulario");
+        }
+
         /* attach a submit handler to the forms */
-        $("form[method='post']").submit(function (event) {
+        $formulario.submit(function (event) {
 
             /* stop form from submitting normally */
             event.preventDefault();
@@ -128,6 +135,51 @@
                 form.elements['action'].disabled = false;
             });
         });
+
+        (function () { 
+            // Function to convert ticks to JavaScript Date object
+            function ticksToDate(ticks) {
+                var epochTicks = 621355968000000000; // Ticks at Unix epoch (January 1, 1970)
+                var ticksPerMillisecond = 10000;     // There are 10,000 ticks per millisecond
+                var msSinceEpoch = (ticks - epochTicks) / ticksPerMillisecond;
+                return new Date(msSinceEpoch);
+            }
+
+            function formatDate(date) {
+                // Array of short month names
+                const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                // Extract components
+                const month = shortMonths[date.getMonth()]; // Get short month name
+                const day = ('0' + date.getDate()).slice(-2);
+                const hours = ('0' + date.getHours()).slice(-2);
+                const minutes = ('0' + date.getMinutes()).slice(-2);
+
+                // Return in Mon/dd hh:mm format
+                return `${day}/${month} ${hours}:${minutes}`;
+            }
+
+            // Function to update the date text before input
+            function updateDateText(inputName) {
+                var input = $('input[name="' + inputName + '"]');
+                var ticksValue = parseInt(input.val());
+                var date = ticksToDate(ticksValue);
+
+                // Format the date according to user's locale (PC region)
+                var formattedDate = formatDate(date);
+
+                // Find the TD containing the input and update its text
+                input.closest('td').contents().filter(function () {
+                    return this.nodeType === 3; // Text node
+                }).each(function () {
+                    this.nodeValue = formattedDate; // Replace StartDate or EndDate with the formatted date
+                });
+            }
+
+            // Update StartDate and EndDate texts
+            updateDateText('startDate');
+            updateDateText('endDate');
+        })();
     });
 </script>
 
