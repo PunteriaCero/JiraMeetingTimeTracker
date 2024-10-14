@@ -37,7 +37,10 @@ namespace CallMSGraph.Controllers
         public async Task<ActionResult> Index(VisorCalendarioModel model, CancellationToken token = default)
         {
             var projects = await class1.GetProjects(token);
-            model.Projects = projects.Select(s => new SelectListItem(s.Value, s.Key)).ToArray();
+            model.Projects = projects
+                .OrderBy(s => s.Value)
+                .Select(s => new SelectListItem(s.Value, s.Key))
+                .ToArray();
 
             if (model.Prefix.IsNullOrEmpty()) 
             {
