@@ -6,11 +6,20 @@
 
 @model CallMSGraph.Models.JiraUser;
 
-<p>Hot to get my token: <a href="https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/" target="_blank">https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/</a></p>
+<p>How to get my token: <a href="https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/" target="_blank">https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/</a></p>
 
-<form method="post" action="@Url.Action("Login")" >
-    @Html.EditorFor(x => x.User, new { htmlAttributes = new { placeholder = "example@domain.com" } } )
-    @Html.EditorFor(x => x.Token, new { htmlAttributes = new { placeholder = "token" } })
+<p> Create your new token: <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">https://id.atlassian.com/manage-profile/security/api-tokens</a></p>
+
+<form method="post" action="@Url.Action("Login")" class="p-4 border rounded-3 shadow-sm">
+    <div class="mb-3">
+        @Html.EditorFor(x => x.User, new
+            {
+                htmlAttributes = new { placeholder = "example@domain.com", @class = "form-control" }
+} )
+    </div>
+    <div class="mb-3">
+        @Html.EditorFor(x => x.Token, new { htmlAttributes = new { placeholder = "token", @class = "form-control" } })
+    </div>
     <button>SAVE</button>
 </form>
 <p>@Html.DisplayTextFor(x => x.Message)</p>
