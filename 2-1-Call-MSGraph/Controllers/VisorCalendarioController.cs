@@ -153,6 +153,9 @@ namespace CallMSGraph.Controllers
                 requestConfiguration.QueryParameters.StartDateTime = from.ToString("yyyy-MM-ddThh:mm:ss");
                 requestConfiguration.QueryParameters.EndDateTime = to.ToString("yyyy-MM-ddThh:mm:ss");
                 //requestConfiguration.QueryParameters.Count = true;
+
+                // Filtra para obtener solo los eventos que no son privados
+                requestConfiguration.QueryParameters.Filter = "sensitivity ne 'private'";
             });
 
 
