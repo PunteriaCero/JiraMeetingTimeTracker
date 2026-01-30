@@ -1,5 +1,6 @@
 name: Build and deploy .NET Core application to Web App JiraWorkLog
 on:
+  workflow_dispatch: 
   push:
     branches:
     - master
@@ -29,7 +30,7 @@ jobs:
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
     - name: Publish application
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-    - name: Upload artifacts
+    - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: webapp
@@ -42,7 +43,7 @@ jobs:
       name: production
       url: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net
     steps:
-    - name: Download artifact
+    - name: Download artifact from build job
       uses: actions/download-artifact@v4
       with:
         name: webapp
