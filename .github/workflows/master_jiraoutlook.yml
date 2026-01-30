@@ -26,6 +26,9 @@ jobs:
       - name: Build with dotnet
         run: dotnet build 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj --configuration Release
 
+      - name: Clean previous publish
+        run: rm -rf ./publish 2>/dev/null || true
+
       - name: dotnet publish
         run: dotnet publish 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj -c Release -o ./publish
 
