@@ -27,13 +27,13 @@ jobs:
         run: dotnet build 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj -c Release -o ./publish
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-build
-          path: 2-1-Call-MSGraph/bin/Release/net8.0/publish/
+          path: ./publish
 
       - name: Install ReportGenerator
         continue-on-error: true
@@ -75,7 +75,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release-build
-          path: .
+          path: ./publish
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -90,5 +90,5 @@ jobs:
         with:
           app-name: 'JiraOutlook'
           slot-name: 'Production'
-          package: .
+          package: ./publish
           
