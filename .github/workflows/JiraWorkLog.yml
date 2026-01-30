@@ -11,9 +11,8 @@ env:
   AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
   AZURE_WEBAPP_PACKAGE_PATH: published
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 7.0.x
+  DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: .
-  AZURE_SLOT_NAME: ${{ vars.AZURE_SLOT_NAME }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +30,7 @@ jobs:
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
     - name: Publish application
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-    - name: Publish Artifacts
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: webapp
@@ -44,15 +43,15 @@ jobs:
       name: production
       url: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net
     steps:
-    - name: Download artifact from build job
+    - name: Download artifact
       uses: actions/download-artifact@v4
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.JiraWorkLog_94AB }}
+        slot-name: 'Production'
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        slot-name: ${{ env.AZURE_SLOT_NAME }}
