@@ -58,5 +58,3 @@ public class MockJiraClient : Atlassian.Jira.Jira
 {
     public MockJiraClient() : base(null, null, null) { }
 }
-    }
-}
