@@ -29,19 +29,23 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Upload artifact for deployment job
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: release-build
+          path: .
 
   test:
     runs-on: ubuntu-latest
+    needs: build
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-build
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
@@ -55,7 +59,7 @@ jobs:
         run: dotnet test --configuration Release --no-build /p:CollectCoverageMetrics=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=cobertura
 
       - name: Generate coverage report
-        run: reportgenerator -reports:\"**/coverage/coverage.cobertura.xml\" -targetdir:\"coverage-report\" -reporttypes:Html
+        run: reportgenerator -reports:"**/coverage/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:Html
 
       - name: Deploy coverage report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -75,7 +79,8 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: release-build
+          path: .
       
       - name: Login to Azure
         uses: azure/login@v2
