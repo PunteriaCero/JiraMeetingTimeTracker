@@ -94,4 +94,5 @@ jobs:
           app-name: 'JiraOutlook'
           slot-name: 'Production'
           package: ./publish
+          clean: true
           
