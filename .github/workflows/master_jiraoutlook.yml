@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-build
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: 2-1-Call-MSGraph/bin/Release/net8.0/publish/
 
       - name: Install ReportGenerator
         continue-on-error: true
@@ -45,7 +45,14 @@ jobs:
 
       - name: Generate coverage report
         continue-on-error: true
-        run: reportgenerator -reports:"**/coverage/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:Html
+        run: |
+          if [ -f "JiraDriverTest/bin/Release/net8.0/coverage.cobertura.xml" ]; then
+            reportgenerator -reports:"JiraDriverTest/bin/Release/net8.0/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:Html
+          elif [ -f "JiraDriverTest/coverage/coverage.cobertura.xml" ]; then
+            reportgenerator -reports:"JiraDriverTest/coverage/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:Html
+          else
+            echo "No coverage file found"
+          fi
 
       - name: Deploy coverage report to GitHub Pages
         continue-on-error: true

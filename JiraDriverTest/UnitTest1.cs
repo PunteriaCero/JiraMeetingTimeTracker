@@ -29,4 +29,34 @@ public class Tests
         await clase.RegisterWork("SCT310-4771", "1m", DateTime.Now, "prueba API");
         Assert.Pass();
     }
+
+    [Test]
+    public void TestConstructor()
+    {
+        // Test que verifica que la clase se instancia correctamente sin credenciales reales
+        var mockJira = new MockJiraClient();
+        var instance = new Class1(mockJira);
+        
+        Assert.That(instance, Is.Not.Null);
+    }
+
+    [Test]
+    public void TestBasicPropertyInitialization()
+    {
+        var mockJira = new MockJiraClient();
+        var instance = new Class1(mockJira);
+        instance.SetName("TestUser");
+        instance.SetAccountId("test-account-123");
+        
+        Assert.That(instance.Name, Is.EqualTo("TestUser"));
+        Assert.That(instance.AccountId, Is.EqualTo("test-account-123"));
+    }
+}
+
+// Mock class para testing sin dependencias externas
+public class MockJiraClient : Atlassian.Jira.Jira
+{
+    public MockJiraClient() : base(null, null, null) { }
+}
+    }
 }

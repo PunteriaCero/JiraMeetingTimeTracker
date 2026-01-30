@@ -16,6 +16,9 @@ public class Class1 : IClass1
         this.jira = jira;
     }
 
+    public void SetName(string name) => Name = name;
+    public void SetAccountId(string accountId) => AccountId = accountId;
+
     public static async Task<Class1> Init(string url, string user, string password)
     {
         var imp = new Class1(Jira.CreateRestClient(url, user, password));

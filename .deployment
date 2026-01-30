@@ -1,0 +1,2 @@
+[config]
+command = cd %DEPLOYMENT_SOURCE% && dotnet publish 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj -c Release -o %DEPLOYMENT_TARGET%
