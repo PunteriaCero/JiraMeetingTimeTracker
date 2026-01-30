@@ -24,7 +24,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj --configuration Release
 
       - name: dotnet publish
         run: dotnet publish 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
