@@ -27,7 +27,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish 2-1-Call-MSGraph/2-1-Call-MSGraph.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish 2-1-Call-MSGraph/WebApp-OpenIDConnect-DotNet-graph.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
