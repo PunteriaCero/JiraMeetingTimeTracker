@@ -95,4 +95,6 @@ jobs:
           slot-name: 'Production'
           package: ./publish
           clean: true
-          
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
+          AzureAd__ClientSecret: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
