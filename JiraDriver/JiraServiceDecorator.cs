@@ -10,11 +10,11 @@ namespace JiraDriver
 
         public string Name => class1.Name;
 
-        public async Task Init(string user, string token)
+        public async Task Init(string user, string token, string jiraUrl)
         {
             try
             {
-                class1 = await Class1.Init("https://baufest.atlassian.net/", user, token);
+                class1 = await Class1.Init(jiraUrl, user, token);
             }
             catch (AuthenticationException ex)
             {

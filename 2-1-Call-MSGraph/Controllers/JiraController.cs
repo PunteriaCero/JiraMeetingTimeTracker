@@ -19,19 +19,20 @@ namespace CallMSGraph.Controllers
         {
             jiraUser.User = Request.Cookies["JiraUser"];
             jiraUser.Token = Request.Cookies["JiraToken"];
+            jiraUser.Url = Request.Cookies["JiraUrl"];
 
             return View(jiraUser);
         }
 
-        // GET: JiraController/Create
+        // POST: JiraController/Login
         [HttpPost]
         public async Task<ActionResult> Login(JiraUser jiraUser)
         {
             Response.Cookies.Append("JiraUser", jiraUser.User);
-
-            await jira.Init(jiraUser.User, jiraUser.Token);
-            
             Response.Cookies.Append("JiraToken", jiraUser.Token);
+            Response.Cookies.Append("JiraUrl", jiraUser.Url);
+
+            await jira.Init(jiraUser.User, jiraUser.Token, jiraUser.Url);
 
             ViewBag.Name = jira.Name;
             return View();

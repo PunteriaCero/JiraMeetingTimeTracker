@@ -12,13 +12,19 @@
 
 <form method="post" action="@Url.Action("Login")" class="p-4 border rounded-3 shadow-sm">
     <div class="mb-3">
+        @Html.LabelFor(x => x.User)
         @Html.EditorFor(x => x.User, new
             {
                 htmlAttributes = new { placeholder = "example@domain.com", @class = "form-control" }
 } )
     </div>
     <div class="mb-3">
+        @Html.LabelFor(x => x.Token)
         @Html.EditorFor(x => x.Token, new { htmlAttributes = new { placeholder = "token", @class = "form-control" } })
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(x => x.Url)
+        @Html.EditorFor(x => x.Url, new { htmlAttributes = new { placeholder = "https://your-domain.atlassian.net/", @class = "form-control" } })
     </div>
     <button>SAVE</button>
 </form>

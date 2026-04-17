@@ -22,8 +22,9 @@ namespace CallMSGraph.Filters
             var cookies = context.HttpContext.Request.Cookies;
             var jiraToken = cookies["JiraToken"];
             var jiraUser = cookies["JiraUser"];
+            var jiraUrl = cookies["JiraUrl"];
 
-            if (jiraUser.IsNullOrEmpty() || jiraToken.IsNullOrEmpty()) {
+            if (jiraUser.IsNullOrEmpty() || jiraToken.IsNullOrEmpty() || jiraUrl.IsNullOrEmpty()) {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary
                 {
                     { "controller", "Jira" },
@@ -33,7 +34,7 @@ namespace CallMSGraph.Filters
                 return;
             }
 
-            await jiraServiceDecorator.Init(jiraUser, jiraToken);
+            await jiraServiceDecorator.Init(jiraUser, jiraToken, jiraUrl);
         }
     }
 }
