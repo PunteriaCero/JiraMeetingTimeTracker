@@ -4,3 +4,14 @@
 
 .vs
 
+[Bb]in/
+[Oo]bj/
+TestResults/
+coverage/
+coverage-report/
+*.coverage
+*.coveragexml
+*.trx
+*.user
+*.suo
+

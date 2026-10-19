@@ -1,18 +1,26 @@
 ﻿using CallMSGraph.Filters;
 using CallMSGraph.Models;
 using JiraDriver;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
+using Microsoft.Graph.Models.ODataErrors;
+using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,8 +58,76 @@ namespace CallMSGraph.Controllers
                 return View(model);
             }
 
-            model.Calendar = await GetEventsWithJiraAsync(model.Prefix, model.From, model.To);
+            try
+            {
+                model.Calendar = await GetEventsWithJiraAsync(model.Prefix, model.From, model.To);
+            }
+            catch (ODataError exception) when (exception.ResponseStatusCode == StatusCodes.Status401Unauthorized)
+            {
+                var claims = GetClaimsChallenge(exception);
+                if (string.IsNullOrWhiteSpace(claims))
+                {
+                    throw;
+                }
+
+                const string challengeAttemptParameter = "calendarClaimsChallenge";
+                if (Request.Query.ContainsKey(challengeAttemptParameter))
+                {
+                    return new ContentResult
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        ContentType = "text/plain; charset=utf-8",
+                        Content = "Microsoft Graph sigue requiriendo autenticacion adicional para acceder al calendario. Contacta al administrador de Baufest para revisar las politicas de acceso condicional."
+                    };
+                }
+
+                var properties = new AuthenticationProperties
+                {
+                    RedirectUri = QueryHelpers.AddQueryString(Request.GetEncodedPathAndQuery(), challengeAttemptParameter, "1")
+                };
+                properties.Items["claims"] = claims;
+                properties.SetParameter("scope", new List<string> { "openid", "profile", "offline_access", "Calendars.Read" });
+                return Challenge(properties, OpenIdConnectDefaults.AuthenticationScheme);
+            }
+
             return View(model);
+        }
+
+        private static string GetClaimsChallenge(ODataError exception)
+        {
+            using var response = new HttpResponseMessage();
+            if (exception.ResponseHeaders != null)
+            {
+                foreach (var header in exception.ResponseHeaders.Where(header =>
+                    string.Equals(header.Key, "WWW-Authenticate", StringComparison.OrdinalIgnoreCase)))
+                {
+                    response.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            try
+            {
+                var claims = WwwAuthenticateParameters.GetClaimChallengeFromResponseHeaders(response.Headers);
+                if (string.IsNullOrWhiteSpace(claims))
+                {
+                    return null;
+                }
+
+                using var document = JsonDocument.Parse(claims);
+                return document.RootElement.ValueKind == JsonValueKind.Object ? claims : null;
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
+            catch (MsalClientException)
+            {
+                return null;
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
 
         [TypeFilter(typeof(JiraAuthFilter))]
