@@ -1,70 +1,138 @@
 ﻿@model CallMSGraph.Models.VisorCalendarioModel;
 
-<h2>Search calendar events</h2>
-<form method="get">
-    @Html.EditorFor(x => x.From)
-    @Html.EditorFor(x => x.To)
-    @Html.DropDownListFor(m => m.Prefix, new SelectList(Model.Projects, "Value", "Text"), "Select")
-    @* <input type="text" name="prefix" value="@Model?.Prefix" /> *@
-    <button>SEARCH</button>
-</form>
-<br />
-<br />
+<style>
+    .visor-wide { width: 96vw; position: relative; left: 50%; transform: translateX(-50%); }
+    .visor-search .form-group { margin-right: 1rem; margin-bottom: .5rem; }
+    .visor-search input, .visor-search select { min-width: 11rem; }
+    .visor-table { font-size: .85rem; }
+    .visor-table thead th {
+        background: #343a40; color: #fff; border: 0; white-space: nowrap;
+        position: sticky; top: 0; z-index: 1;
+    }
+    .visor-table td { vertical-align: middle; }
+    .visor-table tbody tr:hover { background-color: #f1f5fb; }
+    .visor-table tbody tr.row-logged { background-color: #e9f7ef; }
+    .visor-table tbody tr.row-logged:hover { background-color: #dcf1e5; }
+    .visor-table .col-action { width: 6.5rem; text-align: center; }
+    .visor-table .col-action button { min-width: 5.5rem; }
+    .visor-table .col-subject { min-width: 16rem; }
+    .visor-table .col-date { white-space: nowrap; }
+    .visor-table input[readonly] {
+        border: 0; background: transparent; padding: 0; width: 100%; min-width: 4rem; color: #495057;
+    }
+    .visor-table input[name='jiraStartDate'], .visor-table input[name='jiraCreateDate'] { min-width: 11rem; }
+    .visor-summary { color: #6c757d; }
+</style>
 
-<h2>Results</h2>
-@if (Model?.Calendar != null)
-{
-    <small>
-    <table cellpadding="1" border="1">
-        <thead>
-            <tr>
-                <th>Actions</th>
-                <th>Issue</th>
-                <th>Subject</th>
-                <th>StartDate</th>
-                <th>EndDate</th>
-                <th>Jira ID</th>
-                <th>Jira Hs</th>
-                <th>Jira StartDate</th>
-                <th>Jira CreateDate</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Calendar)
+<div class="visor-wide">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white"><h5 class="mb-0">Search calendar events</h5></div>
+        <div class="card-body">
+            <form method="get" class="form-inline visor-search">
+                <div class="form-group">
+                    <label class="mr-2 font-weight-bold" for="From">From</label>
+                    @Html.EditorFor(x => x.From, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    <label class="mr-2 font-weight-bold" for="To">To</label>
+                    @Html.EditorFor(x => x.To, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    <label class="mr-2 font-weight-bold" for="Prefix">Project</label>
+                    @Html.DropDownListFor(m => m.Prefix, new SelectList(Model.Projects, "Value", "Text"), "Select", new { @class = "form-control" })
+                </div>
+                <button class="btn btn-primary mb-2">SEARCH</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center">
+            <h5 class="mb-0">Results</h5>
+            @if (Model?.Calendar != null)
             {
-                <form method="post" action="@Url.Action("Update")">
-                <tr>
-                    <td>
-                        @if (item.JiraWorkLog != null)
-                        {
-                            <button name="action">REMOVE</button>
-                        } 
-                        else
-                        {
-                            <button name="action">ADD</button>
-                        }
-                    </td>
-                    <td>@item.Issue <input type="hidden" name="issue" value="@item.Issue"></td>
-                    <td>@item.Subject <input type="hidden" name="subject" value="@item.Subject"></td>
-                    <td>@item.StartDate <input type="hidden" name="startDate" value="@item.StartDate.ToUniversalTime().Ticks"></td>
-                    <td>@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate.ToUniversalTime().Ticks"></td>
-                    <td><input type="text" readonly="readonly" name="Id" value="@item.JiraWorkLog?.Id"></td>
-                    <td><input type="text" readonly="readonly" name="jiraLength" value="@item.JiraWorkLog?.Length"></td>
-                    <td><input type="datetime" readonly="readonly" name="jiraStartDate" value="@item.JiraWorkLog?.StartDate"></td>
-                    <td><input type="datetime" readonly="readonly" name="jiraCreateDate" value="@item.JiraWorkLog?.CreateDate"></td>
-                </tr>
-                </form>
+                <div class="d-flex align-items-center">
+                    <span class="visor-summary mr-3" id="summary"></span>
+                    <button type="button" id="addAll" class="btn btn-success">ADD ALL</button>
+                </div>
             }
-        </tbody>
-    </table>
-    </small>
-}
+        </div>
+        @if (Model?.Calendar != null)
+        {
+            <div class="table-responsive">
+            <table class="table table-sm table-borderless mb-0 visor-table">
+                <thead>
+                    <tr>
+                        <th class="col-action">Actions</th>
+                        <th>Issue</th>
+                        <th>Subject</th>
+                        <th>StartDate</th>
+                        <th>EndDate</th>
+                        <th>Jira ID</th>
+                        <th>Jira Hs</th>
+                        <th>Jira StartDate</th>
+                        <th>Jira CreateDate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Calendar)
+                    {
+                        <form method="post" action="@Url.Action("Update")">
+                        <tr class="@(item.JiraWorkLog != null ? "row-logged" : "")">
+                            <td class="col-action">
+                                @if (item.JiraWorkLog != null)
+                                {
+                                    <button name="action" class="btn btn-sm btn-outline-danger">REMOVE</button>
+                                }
+                                else
+                                {
+                                    <button name="action" class="btn btn-sm btn-success">ADD</button>
+                                }
+                            </td>
+                            <td><strong>@item.Issue</strong> <input type="hidden" name="issue" value="@item.Issue"></td>
+                            <td class="col-subject">@item.Subject <input type="hidden" name="subject" value="@item.Subject"></td>
+                            <td class="col-date">@item.StartDate <input type="hidden" name="startDate" value="@item.StartDate.ToUniversalTime().Ticks"></td>
+                            <td class="col-date">@item.EndDate <input type="hidden" name="endDate" value="@item.EndDate.ToUniversalTime().Ticks"></td>
+                            <td><input type="text" readonly="readonly" name="Id" value="@item.JiraWorkLog?.Id"></td>
+                            <td><input type="text" readonly="readonly" name="jiraLength" value="@item.JiraWorkLog?.Length"></td>
+                            <td><input type="datetime" readonly="readonly" name="jiraStartDate" value="@item.JiraWorkLog?.StartDate"></td>
+                            <td><input type="datetime" readonly="readonly" name="jiraCreateDate" value="@item.JiraWorkLog?.CreateDate"></td>
+                        </tr>
+                        </form>
+                    }
+                </tbody>
+            </table>
+            </div>
+        }
+        else
+        {
+            <div class="card-body text-muted">Pick a date range and project, then press SEARCH.</div>
+        }
+    </div>
+</div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     let $ = jQuery;
     $(document).ready(function () {
 
         const $formulario = $("form[method='post']");
+
+        // Reflects the Jira worklog state in the row button, row color and summary
+        function setRowState(form, logged) {
+            const button = form.elements['action'];
+            button.innerText = logged ? "REMOVE" : "ADD";
+            $(button).toggleClass("btn-outline-danger", logged).toggleClass("btn-success", !logged);
+            $(button).closest("tr").toggleClass("row-logged", logged);
+            refreshSummary();
+        }
+
+        function refreshSummary() {
+            const total = $formulario.length;
+            const pending = $formulario.filter(function () { return !this.elements['Id'].value; }).length;
+            $("#summary").text(`${total} events · ${total - pending} in Jira · ${pending} pending`);
+            $("#addAll").prop("disabled", pending === 0);
+        }
+        refreshSummary();
 
         if (!$formulario) {
             console.error("No se pudo encontrar el formulario");
@@ -100,7 +168,7 @@
 
             let url = '@Url.Action("Create")';
             let done = (data) => {
-                form.elements['action'].innerText = "REMOVE";
+                setRowState(form, true);
                 form.elements['Id'].value = data.id;
                 form.elements['jiraCreateDate'].value = data.createDate;
                 form.elements['jiraLength'].value = data.length;
@@ -110,7 +178,7 @@
             if (values.Id) {
                 url = '@Url.Action("Delete")';
                 done = (data) => {
-                    form.elements['action'].innerText = "ADD";
+                    setRowState(form, false);
                     form.elements['Id'].value = "";
                     form.elements['jiraCreateDate'].value = "";
                     form.elements['jiraLength'].value = "";
@@ -122,6 +190,7 @@
 
             /* Send the data using post with element id name and name2*/
             let posting = $.post(url, values);
+            $form.data('posting', posting);
 
             /* Alerts the results */
             posting.done(done);
@@ -134,6 +203,33 @@
                 clearInterval(interval);
                 form.elements['action'].disabled = false;
             });
+        });
+
+        /* ADD ALL: submit sequentially every row that has no Jira worklog yet */
+        $("#addAll").click(async function () {
+            const $button = $(this);
+            $button.prop("disabled", true);
+            try {
+                const pending = $formulario.filter(function () {
+                    return !this.elements['Id'].value;
+                }).toArray();
+
+                for (const form of pending) {
+                    const $form = $(form);
+                    $form.removeData('posting');
+                    $form.trigger('submit');
+                    const posting = $form.data('posting');
+                    if (posting) {
+                        try {
+                            await posting;
+                        } catch (e) {
+                            break; // the submit handler already reported the error
+                        }
+                    }
+                }
+            } finally {
+                refreshSummary();
+            }
         });
 
         (function () { 

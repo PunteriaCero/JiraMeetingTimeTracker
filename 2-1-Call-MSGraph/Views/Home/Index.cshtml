@@ -1,16 +1,86 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    .home-step-number {
+        width: 2.5rem; height: 2.5rem; line-height: 2.5rem; border-radius: 50%;
+        background: #1b6ec2; color: #fff; font-weight: bold; text-align: center; flex: none;
+    }
+</style>
 
-<div class="text-center"><p>
-    <h5 class="display-5">Enable your ASP.NET Core web app to sign in users and call Microsoft Graph with the Microsoft identity platform </h5>
+<div class="jumbotron bg-white border shadow-sm py-5 mt-3">
+    <h1 class="display-4">Jira Meeting Time Tracker</h1>
+    <p class="lead mb-4">
+        Log your meetings in Jira without typing them one by one. The tool reads your Outlook calendar,
+        finds the meetings that mention a Jira issue, and registers the time as worklogs with a single click.
     </p>
-    <img src="https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/raw/master/2-WebApp-graph-user/2-1-Call-MSGraph/ReadmeFiles/sign-in.png" />
-    <p>Integrate an ASP.NET Core web app with the Microsoft Identity platform and calls Microsoft Graph API for the signed-in user</p>
+    <a class="btn btn-primary btn-lg" asp-controller="VisorCalendario" asp-action="Index">Open the calendar viewer</a>
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <a class="btn btn-outline-secondary btn-lg ml-2" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign in</a>
+    }
 </div>
 
+<h2 class="h4 mb-3">How it works</h2>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="d-flex">
+            <div class="home-step-number mr-3">1</div>
+            <div>
+                <h3 class="h5">Sign in</h3>
+                <p class="text-muted mb-0">
+                    Sign in with your Microsoft account to let the tool read your calendar, and with your Jira account
+                    to read and write worklogs.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="d-flex">
+            <div class="home-step-number mr-3">2</div>
+            <div>
+                <h3 class="h5">Search your meetings</h3>
+                <p class="text-muted mb-0">
+                    Pick a date range and a Jira project. Only meetings whose subject contains an issue key of that project
+                    (for example <code>ABC-123</code>) are listed. Private events are ignored.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="d-flex">
+            <div class="home-step-number mr-3">3</div>
+            <div>
+                <h3 class="h5">Review what is already logged</h3>
+                <p class="text-muted mb-0">
+                    Each meeting is compared with Jira. Rows with a worklog on that issue and start time are highlighted
+                    in green; the others are pending.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="d-flex">
+            <div class="home-step-number mr-3">4</div>
+            <div>
+                <h3 class="h5">Add or remove worklogs</h3>
+                <p class="text-muted mb-0">
+                    Use <strong>ADD</strong> or <strong>REMOVE</strong> on a single meeting, or <strong>ADD ALL</strong>
+                    to register every pending meeting at once.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="h5">Good to know</h2>
+        <ul class="mb-0">
+            <li>The time logged is the meeting duration, rounded up to the next half hour.</li>
+            <li>The issue key must appear in the meeting subject, with the project prefix you select.</li>
+            <li>Only your own calendar is read, and nothing is changed in Outlook.</li>
+        </ul>
+    </div>
+</div>
