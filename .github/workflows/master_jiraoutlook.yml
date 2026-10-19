@@ -87,6 +87,17 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_678187CF7CE5494C867ABEEF61AFCA31 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B11E01EF38A340E8B025491CAA912ACD }}
 
+      - name: Configure Application Insights
+        env:
+          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+        run: >-
+          az webapp config appsettings set
+          --name JiraOutlook
+          --resource-group Suscripcion1-PayAsGo
+          --subscription e2cb50b8-0aef-4599-b362-b1dc560a6f0f
+          --settings "APPLICATIONINSIGHTS_CONNECTION_STRING=$APPLICATIONINSIGHTS_CONNECTION_STRING"
+          --output none
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3

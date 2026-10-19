@@ -1,5 +1,6 @@
 using Azure;
 using Azure.Identity;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Azure.Security.KeyVault.Secrets;
 using CallMSGraph.Filters;
 using JiraDriver;
@@ -29,6 +30,13 @@ namespace WebApp_OpenIDConnect_DotNet_graph
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var applicationInsightsConnectionString = Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+            if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
+            {
+                services.AddOpenTelemetry().UseAzureMonitor(options =>
+                    options.ConnectionString = applicationInsightsConnectionString);
+            }
+
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
             services.AddCors(options =>
